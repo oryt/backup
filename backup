@@ -1,0 +1,30 @@
+#!/bin/bash
+# Script to create tar of folder user enters. The tar tolder will be created with Backup, hostname and current date as name.
+USERFILE=""
+DAY=$(date +%Y-%m-%d)
+ME=$(hostname -s)
+ARCHIVE="Backup-$ME-$DAY.tar.gz"
+read -t 10 -p "Please enter name of folder to backup " USERFILE
+if [ -z "$USERFILE" ]; then
+echo ”You didnt enter a folder name. I am not angry I am just disappointed.”
+exit 1
+fi
+if [ ! -e $USERFILE ]; then
+echo ”No such file or folder”
+exit 1
+fi
+if [ ! -d $USERFILE ]; then
+echo ”Please enter a folder to backup”
+exit 1
+fi
+if [ ! -r "$USERFILE" ]; then
+echo "$USERFILE is not readable by user: $USER"
+exit 1
+fi
+if [ -e $ARCHIVE  ]; then
+echo ”Please move existing backupfile before running the backupscript ”
+exit 1
+else
+tar cfp $ARCHIVE $USERFILE
+fi
+exit 0
